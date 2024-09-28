@@ -1,0 +1,44 @@
+version: "1"
+
+package:
+  id: net.sourceforge.atanks
+  name: atanks
+  version: 6.5.0.0
+  kind: app
+  description: |
+    Atanks is a multi-platform Scorched Earth clone similar to the Worms series of games. Annihilate the other tanks to earn money, then spend it on bigger and better shields and weapons to wipe out the opposition.
+
+base: org.deepin.foundation/23.0.0
+runtime: org.deepin.Runtime/23.0.1
+
+command:
+  - /opt/apps/net.sourceforge.atanks/files/bin/atanks
+
+sources:
+  - kind: git
+    url: https://git.code.sf.net/p/atanks/atanks
+    commit: b9e3be3988a772bf7d5b6fa1d8811e98ca7f52ac
+
+  - kind: file
+    url: https://community-packages.deepin.com/beige/pool/main/a/allegro4.4/liballegro4.4_4.4.3.1-2_amd64.deb
+    digest: 1671de6d7f13555e932199011647aa479bb990acae8dd023901b61c318e44382
+
+  - kind: file
+    url: https://community-packages.deepin.com/beige/pool/main/a/allegro4.4/liballegro4-dev_4.4.3.1-2_amd64.deb
+    digest: b7baf4bbf717adcfe3fcd13e07b733ebf62c33495e0e6ea8b4c0968ed85abe52
+
+  - kind: file
+    url: https://community-packages.deepin.com/beige/pool/main/libx/libxpm/libxpm4_3.5.12-1_amd64.deb
+    digest: d059120ee0223b38479b03c9693f9c4fe39fd71cb37d808185250311013b3aa9
+
+  - kind: file
+    url: https://community-packages.deepin.com/beige/pool/main/libx/libxpm/libxpm-dev_3.5.12-1_amd64.deb
+    digest: 8c0c3fb5b5b46325b0e69b8eab8b8e14a92386e26c62ea919159acbbcae2f443
+
+build: |
+  echo "" > $PREFIX/packages.list
+  bash ./install_dep linglong/sources "$PREFIX"
+  cd /project/linglong/sources/atanks
+  git apply /project/patches/0001-fix-path.patch
+  make PREFIX=${PREFIX}
+  make install 
