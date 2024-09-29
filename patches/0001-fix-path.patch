@@ -1,0 +1,43 @@
+From 9fc287e7635ed98c2eba8db8d84c56ea6519e5fd Mon Sep 17 00:00:00 2001
+From: Shenyufan <751890223@qq.com>
+Date: Sun, 8 Sep 2024 20:57:27 +0800
+Subject: [PATCH] fix-path
+
+---
+ Makefile | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index dca297f..b519f6b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -142,21 +142,21 @@ endif
+ # Flags for compiler and linker
+ # ------------------------------------
+ CPPFLAGS += -DDATA_DIR=\"${INSTALLDIR}\" -D$(PLATFORM) -DVERSION=\"${VERSION}\"
+-CXXFLAGS += -Wall -Wextra $(PEDANDIC_FLAG) -std=c++$(GCC_CXXSTD)
++CXXFLAGS += -Wall -Wextra $(PEDANDIC_FLAG) -std=c++$(GCC_CXXSTD) -I$(PREFIX)/include
+ LDFLAGS  +=
+ 
+ # Depending on the platform, some values have to be appended:
+ ifeq (MACOSX,$(PLATFORM))
+-  CPPFLAGS := ${CPPFLAGS} -I/usr/local/include $(shell allegro-config --cppflags)
++  CPPFLAGS := ${CPPFLAGS} -I/$(PREFIX)/include $(shell allegro-config --cppflags)
+   LDFLAGS  := ${LDFLAGS} $(shell allegro-config --libs)
+ else ifeq (WIN32,$(PLATFORM))
+-  CPPFLAGS := ${CPPFLAGS} -I/usr/local/include
++  CPPFLAGS := ${CPPFLAGS} -I/$(PREFIX)/include
+   CXXFLAGS := ${CXXFLAGS} -mwindows
+   LDFLAGS  := ${LDFLAGS} -mwindows -L. -lalleg44
+ else
+   ifneq (,$(findstring bsd,$(MAKECMDGOALS)))
+-    C_INCLUDE_PATH     := /usr/local/include
+-    CPLUS_INCLUDE_PATH := /usr/local/include
++    C_INCLUDE_PATH     := $(PREFIX)/include
++    CPLUS_INCLUDE_PATH := $(PREFIX)/include
+     CXXFLAGS           := ${CXXFLAGS} -Wno-c99-extensions
+     export C_INCLUDE_PATH
+     export CPLUS_INCLUDE_PATH
+-- 
+2.43.4
+
